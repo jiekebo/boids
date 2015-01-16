@@ -1,4 +1,4 @@
 .DS_Store
 
-boids.js
+public/boids.js
 node_modules
