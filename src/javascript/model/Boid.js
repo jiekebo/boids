@@ -25,17 +25,17 @@ Boid.prototype = {
   update: function(scene) {
     var boids = scene.getElements(this.constructor)
 
-    v1 = this._rule1(boids);
-    v2 = this._rule2(scene.getElements());
-    v3 = this._rule3(boids);
-    v4 = this._rule4();
+    v1 = this._cohesion_rule(boids);
+    v2 = this._avoidance_rule(scene.getElements());
+    v3 = this._alignment_rule(boids);
+    v4 = this._boundary_rule();
 
     this.velocity = this.velocity.add(v1).add(v2).add(v3).add(v4);
     this.position = this.position.add(this.velocity);
   },
 
   // Try to fly towards the centre of mass of neighbouring boids.
-  _rule1: function(boids) {
+  _cohesion_rule: function(boids) {
     var aggregator = new Vector2D(0, 0);
     _.forEach(boids, function(boid) {
       if(boid === this) {
@@ -48,7 +48,7 @@ Boid.prototype = {
   },
 
   // Try to keep a small distance away from other objects (including other boids).
-  _rule2: function(boids) {
+  _avoidance_rule: function(boids) {
     var repulsor = new Vector2D(0, 0);
     _.forEach(boids, function(boid) {
       if(boid === this) {
@@ -62,7 +62,7 @@ Boid.prototype = {
   },
 
   // Try to match velocity with near boids.
-  _rule3: function(boids) {
+  _alignment_rule: function(boids) {
     var aggregator = new Vector2D(0, 0);
     _.forEach(boids, function(boid) {
       if(boid === this) {
@@ -75,7 +75,7 @@ Boid.prototype = {
   },
 
   // Try to keep the boids within the confines of the playground.
-  _rule4: function() {
+  _boundary_rule: function() {
     var velocity = new Vector2D(0, 0);
     if(this.position.x < 0) {
       velocity.x = config.edgeRepulsionVelocity;
