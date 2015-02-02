@@ -7,5 +7,6 @@ module.exports = {
     velocityDivision: 8,
     edgeRepulsionVelocity: 2,
     quadtreeNodeCapacity: 4,
-    quadtreeMaxLevel: 10
+    quadtreeMaxLevel: 10,
+    debug: false
 };

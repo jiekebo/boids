@@ -34,7 +34,7 @@ Scene.prototype = {
     _.forEach(this.elements, function(element) {
       element.draw(this.ctx);
     }.bind(this));
-    if(document.getElementById("debug").checked) {
+    if(config.debug || document.getElementById("debug").checked) {
       this.quadtree.draw(this.ctx);
     }
   },
