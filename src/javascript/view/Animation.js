@@ -23,7 +23,6 @@ Animation.prototype = {
       }
     }.bind(this), this.fps);
   }
-
 }
 
 module.exports = Animation;

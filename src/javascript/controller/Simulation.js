@@ -25,7 +25,6 @@ Simulation.prototype = {
     var anim = new Animation(config.fps, scene);
     anim.start();
   }
-
 }
 
 module.exports = Simulation;

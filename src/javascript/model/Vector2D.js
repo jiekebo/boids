@@ -21,7 +21,6 @@ Vector2D.prototype = {
   length: function() {
     return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
   }
-
 }
 
 module.exports = Vector2D;

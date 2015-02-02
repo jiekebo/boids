@@ -1,7 +1,6 @@
 var _ = require('lodash');
 
 var config = require('../config');
-
 var Vector2D = require('../model/Vector2D');
 
 
@@ -16,6 +15,7 @@ Boid.prototype = {
   constructor: Boid,
   
   draw: function(ctx) {
+
     ctx.beginPath();
     ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = this.color;
@@ -23,11 +23,17 @@ Boid.prototype = {
   },
 
   update: function(scene) {
-    var boids = scene.getElements(this.constructor)
+    var neighbourBoids = scene.quadtree.queryRange({
+      center:{
+        x:this.position.x, 
+        y:this.position.y
+      }, 
+      halfDimension: config.boidRange}
+    );
 
-    v1 = this._cohesion_rule(boids);
-    v2 = this._avoidance_rule(scene.getElements());
-    v3 = this._alignment_rule(boids);
+    v1 = this._cohesion_rule(neighbourBoids);
+    v2 = this._avoidance_rule(neighbourBoids);
+    v3 = this._alignment_rule(neighbourBoids);
     v4 = this._boundary_rule();
 
     this.velocity = this.velocity.add(v1).add(v2).add(v3).add(v4);
@@ -37,6 +43,9 @@ Boid.prototype = {
   // Try to fly towards the centre of mass of neighbouring boids.
   _cohesion_rule: function(boids) {
     var aggregator = new Vector2D(0, 0);
+    if(boids.length <= 1) {
+      return aggregator;
+    }
     _.forEach(boids, function(boid) {
       if(boid === this) {
         return;
@@ -50,6 +59,9 @@ Boid.prototype = {
   // Try to keep a small distance away from other objects (including other boids).
   _avoidance_rule: function(boids) {
     var repulsor = new Vector2D(0, 0);
+    if(boids.length <= 1) {
+      return repulsor;
+    }
     _.forEach(boids, function(boid) {
       if(boid === this) {
         return;
@@ -64,6 +76,9 @@ Boid.prototype = {
   // Try to match velocity with near boids.
   _alignment_rule: function(boids) {
     var aggregator = new Vector2D(0, 0);
+    if(boids.length <= 1) {
+      return aggregator;
+    }
     _.forEach(boids, function(boid) {
       if(boid === this) {
         return;
@@ -91,7 +106,6 @@ Boid.prototype = {
     }
     return velocity;
   }
-
 }
 
 module.exports = Boid;

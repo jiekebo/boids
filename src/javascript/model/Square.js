@@ -11,12 +11,11 @@ Square.prototype = {
   constructor: Square,
   
   draw: function(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.strokeStyle = this.color;
+    ctx.strokeRect(this.position.x, this.position.y, this.width, this.height);
   },
 
   update: function(distance) {}
-
 }
 
 module.exports = Square;
