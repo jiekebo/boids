@@ -3,13 +3,11 @@ var _ = require('lodash');
 var Quadtree = require('../model/Quadtree');
 var config = require('../config');
 
-function Scene() {
+function Scene(canvas, quadtree) {
   this.elements = [];
-  this.canvas = document.getElementById("playground");
-  config.width = this.canvas.width
-  config.height = this.canvas.height
+  this.canvas = canvas;
   this.ctx = this.canvas.getContext("2d");
-  this.quadtree = new Quadtree({x:config.width/2, y:config.height/2}, Math.max(config.width, config.height)/2, 0);
+  this.quadtree = quadtree;
 }
 
 Scene.prototype = {
@@ -18,6 +16,10 @@ Scene.prototype = {
   addElement: function(element) {
     this.elements.push(element);
     this.quadtree.insert(element);
+  },
+
+  removeElement: function() {
+    this.elements.pop();
   },
 
   getElements: function(elementType) {
