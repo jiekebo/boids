@@ -25,4 +25,4 @@ Animation.prototype = {
   }
 }
 
-module.exports = Animation;
+export default Animation;

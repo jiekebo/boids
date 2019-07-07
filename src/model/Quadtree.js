@@ -1,58 +1,16 @@
-var _ = require('lodash')
+import Square from "./Square"
+import Boundary from "./Boundary"
 
-var config = require('../config');
-var Square = require('./Square');
-
-function Boundary(center, halfDimension) {
-  this.center = center;
-  this.halfDimension = halfDimension;
-}
-
-Boundary.prototype = {
-  constructor: Boundary,
-
-  containsPoint: function(point) {
-    if(point.x > this.center.x + this.halfDimension) {
-      return false;
-    }
-    if(point.x < this.center.x - this.halfDimension) {
-      return false;
-    }
-    if(point.y > this.center.y + this.halfDimension) {
-      return false;
-    }
-    if(point.y < this.center.y - this.halfDimension) {
-      return false;
-    }
-    return true;
-  },
-
-  intersectsBoundary: function(boundary) {
-    if(boundary.center.x - boundary.halfDimension > this.center.x + this.halfDimension) {
-      return false;
-    }
-    if(boundary.center.x + boundary.halfDimension < this.center.x - this.halfDimension) {
-      return false;
-    }
-    if(boundary.center.y - boundary.halfDimension > this.center.y + this.halfDimension) {
-      return false;
-    }
-    if(boundary.center.y + boundary.halfDimension < this.center.y - this.halfDimension) {
-      return false;
-    }
-    return true;
-  }
-}
-
-function Quadtree(center, halfDimension, level) {
+function Quadtree(center, halfDimension, level, capacity, maxLevel) {
   this.boundary = new Boundary(center, halfDimension);
   this.boids = [];
   this.level = level;
+  this.capacity = capacity;
+  this.maxLevel = maxLevel;
 }
 
 Quadtree.prototype = {
   constructor: Quadtree,
-  capacity: config.quadtreeNodeCapacity,
   boundary: null,
   nw: null,
   ne: null,
@@ -64,7 +22,7 @@ Quadtree.prototype = {
       return false;
     }
 
-    if(this.level > config.quadtreeMaxLevel || this.boids.length < this.capacity && this.nw == null) {
+    if(this.level > this.maxLevel || this.boids.length < this.capacity && this.nw == null) {
       this.boids.push(boid);
       return true;
     }
@@ -99,10 +57,10 @@ Quadtree.prototype = {
 
     var level = this.level+1;
     
-    this.nw = new Quadtree(nwcenter, subDivDimension, level);
-    this.ne = new Quadtree(necenter, subDivDimension, level);
-    this.sw = new Quadtree(swcenter, subDivDimension, level);
-    this.se = new Quadtree(secenter, subDivDimension, level);
+    this.nw = new Quadtree(nwcenter, subDivDimension, level, this.capacity, this.maxLevel);
+    this.ne = new Quadtree(necenter, subDivDimension, level, this.capacity, this.maxLevel);
+    this.sw = new Quadtree(swcenter, subDivDimension, level, this.capacity, this.maxLevel);
+    this.se = new Quadtree(secenter, subDivDimension, level, this.capacity, this.maxLevel);
 
     while(this.boids.length > 0) {
       var boid = this.boids.pop();
@@ -117,7 +75,7 @@ Quadtree.prototype = {
       return boidsInRange;
     }
 
-    _.forEach(this.boids, function(boid) {
+    this.boids.forEach(function(boid) {
       boidsInRange.push(boid);
     });
 
@@ -152,4 +110,4 @@ Quadtree.prototype = {
   }
 }
 
-module.exports = Quadtree;
+export default Quadtree;

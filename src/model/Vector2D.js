@@ -23,4 +23,4 @@ Vector2D.prototype = {
   }
 }
 
-module.exports = Vector2D;
+export default Vector2D;

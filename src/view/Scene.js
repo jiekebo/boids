@@ -1,13 +1,15 @@
-var _ = require('lodash');
+import Quadtree from "../model/Quadtree"
 
-var Quadtree = require('../model/Quadtree');
-var config = require('../config');
-
-function Scene(canvas, quadtree) {
+function Scene(canvas, quadtree, debug, width, height, capacity, maxLevel) {
   this.elements = [];
   this.canvas = canvas;
   this.ctx = this.canvas.getContext("2d");
   this.quadtree = quadtree;
+  this.debug = debug;
+  this.width = width;
+  this.height = height;
+  this.capacity = capacity;
+  this.maxLevel = maxLevel
 }
 
 Scene.prototype = {
@@ -24,7 +26,7 @@ Scene.prototype = {
 
   getElements: function(elementType) {
     if(elementType) {
-      return _.filter(this.elements, function(element) {
+      return this.elements.filter(function(element) {
         return element instanceof elementType;
       });
     }
@@ -33,20 +35,21 @@ Scene.prototype = {
 
   drawScene: function() {
     this._clearSceneTransparency();
-    _.forEach(this.elements, function(element) {
-      element.draw(this.ctx);
-    }.bind(this));
-    if(config.debug || document.getElementById("debug").checked) {
+    if(this.debug) {
       this.quadtree.draw(this.ctx);
     }
+    this.elements.forEach(function(element) {
+      element.draw(this.ctx);
+    }.bind(this));
   },
 
   updateScene: function() {
-    _.forEach(this.elements, function(element) {
+    this.elements.forEach(function(element) {
       element.update(this);
     }.bind(this));
-    this.quadtree = new Quadtree({x:config.width/2, y:config.height/2}, Math.max(config.width, config.height)/2, 0);
-    _.forEach(this.elements, function(element) {
+    // This is needed to redraw all quadtrees
+    this.quadtree = new Quadtree({x:this.width/2, y:this.height/2}, Math.max(this.width, this.height)/2, 0, this.capacity, this.maxLevel);
+    this.elements.forEach(function(element) {
       this.quadtree.insert(element);
     }.bind(this));
   },
@@ -63,4 +66,4 @@ Scene.prototype = {
   }
 }
 
-module.exports = Scene;
+export default Scene;

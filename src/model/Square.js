@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 function Square(position, width, height, color) {
   this.position = position;
   this.width = width;
@@ -18,4 +16,4 @@ Square.prototype = {
   update: function(distance) {}
 }
 
-module.exports = Square;
+export default Square;

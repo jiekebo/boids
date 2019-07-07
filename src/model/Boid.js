@@ -1,14 +1,17 @@
-var _ = require('lodash');
+import Vector2D from "./Vector2D"
 
-var config = require('../config');
-var Vector2D = require('../model/Vector2D');
-
-
-function Boid(position, velocity, radius, color) {
+function Boid(position, velocity, radius, color, boidRange, centerDivision, distanceRepulsion, velocityDivision, edgeRepulsionVelocity, width, height) {
   this.position = position;
   this.velocity = velocity;
   this.radius = radius;
   this.color = color;
+  this.boidRange = boidRange;
+  this.centerDivision = centerDivision;
+  this.distanceRepulsion = distanceRepulsion;
+  this.velocityDivision = velocityDivision;
+  this.edgeRepulsionVelocity = edgeRepulsionVelocity;
+  this.width = width;
+  this.height = height;
 }
 
 Boid.prototype = {
@@ -28,13 +31,13 @@ Boid.prototype = {
         x:this.position.x, 
         y:this.position.y
       }, 
-      halfDimension: config.boidRange}
+      halfDimension: this.boidRange}
     );
 
-    v1 = this._cohesion_rule(neighbourBoids);
-    v2 = this._avoidance_rule(neighbourBoids);
-    v3 = this._alignment_rule(neighbourBoids);
-    v4 = this._boundary_rule();
+    var v1 = this._cohesion_rule(neighbourBoids);
+    var v2 = this._avoidance_rule(neighbourBoids);
+    var v3 = this._alignment_rule(neighbourBoids);
+    var v4 = this._boundary_rule();
 
     this.velocity = this.velocity.add(v1).add(v2).add(v3).add(v4);
     this.position = this.position.add(this.velocity);
@@ -46,14 +49,14 @@ Boid.prototype = {
     if(boids.length <= 1) {
       return aggregator;
     }
-    _.forEach(boids, function(boid) {
+    boids.forEach(function(boid) {
       if(boid === this) {
         return;
       }
       aggregator = aggregator.add(boid.position);
     }.bind(this));
-    perceivedCenter = aggregator.divide(boids.length - 1);
-    return perceivedCenter.sub(this.position).divide(config.centerDivision);
+    var perceivedCenter = aggregator.divide(boids.length - 1);
+    return perceivedCenter.sub(this.position).divide(this.centerDivision);
   },
 
   // Try to keep a small distance away from other objects (including other boids).
@@ -62,11 +65,11 @@ Boid.prototype = {
     if(boids.length <= 1) {
       return repulsor;
     }
-    _.forEach(boids, function(boid) {
+    boids.forEach(function(boid) {
       if(boid === this) {
         return;
       }
-      if(boid.position.sub(this.position).length() < config.distanceRepulsion) {
+      if(boid.position.sub(this.position).length() < this.distanceRepulsion) {
         repulsor = repulsor.sub(boid.position.sub(this.position));
       }
     }.bind(this));
@@ -79,33 +82,33 @@ Boid.prototype = {
     if(boids.length <= 1) {
       return aggregator;
     }
-    _.forEach(boids, function(boid) {
+    boids.forEach(function(boid) {
       if(boid === this) {
         return;
       }
       aggregator = aggregator.add(boid.velocity);
     }.bind(this));
-    perceivedVelocity = aggregator.divide(boids.length - 1);
-    return perceivedVelocity.sub(this.velocity).divide(config.velocityDivision);
+    var perceivedVelocity = aggregator.divide(boids.length - 1);
+    return perceivedVelocity.sub(this.velocity).divide(this.velocityDivision);
   },
 
   // Try to keep the boids within the confines of the playground.
   _boundary_rule: function() {
     var velocity = new Vector2D(0, 0);
     if(this.position.x < 0) {
-      velocity.x = config.edgeRepulsionVelocity;
+      velocity.x = this.edgeRepulsionVelocity;
     }
-    if(this.position.x > config.width) {
-      velocity.x = ~ config.edgeRepulsionVelocity;
+    if(this.position.x > this.width) {
+      velocity.x = ~ this.edgeRepulsionVelocity;
     }
     if(this.position.y < 0) {
-      velocity.y = config.edgeRepulsionVelocity;
+      velocity.y = this.edgeRepulsionVelocity;
     }
-    if(this.position.y > config.height) {
-      velocity.y = ~ config.edgeRepulsionVelocity;
+    if(this.position.y > this.height) {
+      velocity.y = ~ this.edgeRepulsionVelocity;
     }
     return velocity;
   }
 }
 
-module.exports = Boid;
+export default Boid;
