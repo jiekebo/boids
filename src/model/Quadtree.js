@@ -97,7 +97,7 @@ Quadtree.prototype = {
         x: this.boundary.center.x-this.boundary.halfDimension,
         y: this.boundary.center.y-this.boundary.halfDimension
       },
-      size, size, "red"
+      size, size, "#d4d6d5"
     );
     square.draw(ctx);
     if(this.nw == null) {

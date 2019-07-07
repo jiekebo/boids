@@ -10,6 +10,7 @@ Square.prototype = {
   
   draw: function(ctx) {
     ctx.strokeStyle = this.color;
+    ctx.lineWidth = 0.3;
     ctx.strokeRect(this.position.x, this.position.y, this.width, this.height);
   },
 

@@ -55,8 +55,8 @@ Scene.prototype = {
   },
 
   _clearSceneTransparency: function() {
-    this.ctx.globalAlpha = 0.2;
-    this.ctx.fillStyle = "black";
+    this.ctx.globalAlpha = 0.3;
+    this.ctx.fillStyle = "white";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.globalAlpha = 1;
   },
