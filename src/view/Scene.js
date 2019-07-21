@@ -1,10 +1,10 @@
 import Quadtree from "../model/Quadtree"
 
-function Scene(canvas, quadtree, debug, width, height, capacity, maxLevel) {
+function Scene(canvas, debug, width, height, capacity, maxLevel) {
   this.elements = [];
   this.canvas = canvas;
   this.ctx = this.canvas.getContext("2d");
-  this.quadtree = quadtree;
+  this.quadtree = new Quadtree({x:width/2, y:height/2}, Math.max(width, height)/2, 0, capacity, maxLevel);
   this.debug = debug;
   this.width = width;
   this.height = height;

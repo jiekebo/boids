@@ -4,6 +4,7 @@
   "description": "This is an implementation of Craig Reynolds' boids algorithm described in [pseudocode](http://www.kfish.org/boids/pseudocode.html). This was mainly just done for a short coding excercise (1 day), the routines is in dire need of optimization.",
   "private": true,
   "dependencies": {
+    "heatmap.js": "^2.0.5",
     "lodash": "^4.17.11"
   },
   "devDependencies": {

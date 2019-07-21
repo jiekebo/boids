@@ -39,7 +39,12 @@ Boid.prototype = {
     var v3 = this._alignment_rule(neighbourBoids);
     var v4 = this._boundary_rule();
 
-    this.velocity = this.velocity.add(v1).add(v2).add(v3).add(v4);
+    this.velocity = (this.velocity
+      .add(v1)
+      .add(v2)
+      .add(v3)
+      .add(v4)
+      );
     this.position = this.position.add(this.velocity);
   },
 
