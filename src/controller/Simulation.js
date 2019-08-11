@@ -15,21 +15,25 @@ function Simulation(canvas, config, debug) {
   this.distanceRepulsion = config.distanceRepulsion;
   this.velocityDivision = config.velocityDivision;
   this.edgeRepulsionVelocity = config.edgeRepulsionVelocity;
-  this.fpsCount = fpsCount;
+  this.fpsCount = document.getElementById('fpsCount');
   this.frames = [];
   this.heatmap = [[]];
   this.total_frames = 0;
+  this.heatmapDiv = null;
 }
 
 Simulation.prototype = {
   constructor: Simulation,
 
   init: function() {
-    this.hmap = h337.create({
-      container: document.querySelector('.heatmap'),
-      radius: 15,
-      maxOpacity: 0.3
-    });
+    this.heatmapDiv = document.querySelector('#heatmap');
+    if(this.heatmapDiv != null) {
+      this.hmap = h337.create({
+        container: this.heatmapDiv,
+        radius: 15,
+        maxOpacity: 0.3
+      });
+    }
     for (var i = 0; i < this.boids; i++) {
       this.addBoid();
     }
@@ -89,6 +93,9 @@ Simulation.prototype = {
       }
       this.frames.push(timestamp);
       this.fpsCount.innerHTML = this.frames.length;
+      
+    }
+    if(this.heatmapDiv != null) {
       this.updateHeatmap(this.scene.elements);
     }
   }

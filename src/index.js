@@ -1,6 +1,10 @@
+
 import Simulation from "./controller/Simulation"
 
-var config = {
+export {Simulation};
+
+
+/*var config = {
   boids: 150,
   boidRange: 2,
   distanceRepulsion: 10,
@@ -11,11 +15,11 @@ var config = {
   debug: true
 }
 
-var canvas = document.getElementById("playground");
-
-var simulation = new Simulation(canvas, config, true);
-
-simulation.init();
+window.onload = function() {
+  var canvas = document.getElementById("boids");
+  var simulation = new Simulation(canvas, config, true);
+  simulation.init();
+}*/
 
 /*
 var boidCount = document.getElementById("boidCount");
